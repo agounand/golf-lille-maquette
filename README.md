@@ -2,6 +2,11 @@
 
 Proposition de design réalisée par Alexandre Gounand, membre du club (novembre 2026).
 
-Maquette cliquable : téléphone, ordinateur et administration. Rien n'est enregistré ni réservé, les noms des autres membres sont fictifs.
+Deux versions, avec un bouton V1 / V2 en haut de chaque page :
+
+- V1 (index.html) : maquette complète, téléphone, ordinateur et administration.
+- V2 (v2.html) : écrans clés refaits (Accueil, Green fee, Cours), nouvelles polices et animations, téléphone et ordinateur.
+
+Maquette cliquable. Rien n'est enregistré ni réservé, les noms des autres membres sont fictifs.
 
 Reproduction ou réutilisation sur accord de l'auteur.
