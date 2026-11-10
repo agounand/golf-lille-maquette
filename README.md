@@ -5,7 +5,7 @@ Proposition de design réalisée par Alexandre Gounand, membre du club (novembre
 Deux versions, avec un bouton V1 / V2 en haut de chaque page :
 
 - V1 (index.html) : maquette complète, téléphone, ordinateur et administration.
-- V2 (v2.html) : écrans clés refaits (Accueil, Green fee, Cours), nouvelles polices et animations, téléphone et ordinateur.
+- V2 (v2.html) : toute l’appli refaite (membre, visiteurs, administration), nouvelles polices et animations, téléphone, ordinateur et administration.
 
 Maquette cliquable. Rien n'est enregistré ni réservé, les noms des autres membres sont fictifs.
 
