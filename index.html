@@ -604,6 +604,9 @@ body.admin .stage{align-items:flex-start}
 /* Safari : coins arrondis de la carte photo et confort des lignes de lien */
 .photo{isolation:isolate;-webkit-mask-image:-webkit-radial-gradient(white,black)}
 .linkrow{padding:10px 4px}
+/* Safari : pas de coupure dans les pastilles, les noms et les compteurs */
+.fr,.badge,.chip,.tchip,.fchip,.flag,.reg,.sheet-head>span,.slot .free,.crow .pl{white-space:nowrap}
+.fr,.chip,.tchip{flex-shrink:0}
 
 /* téléphone réel : plein écran */
 @media (max-width:600px){
