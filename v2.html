@@ -607,6 +607,9 @@ body.admin .stage{align-items:flex-start}
 /* Safari : pas de coupure dans les pastilles, les noms et les compteurs */
 .fr,.badge,.chip,.tchip,.fchip,.flag,.reg,.sheet-head>span,.slot .free,.crow .pl{white-space:nowrap}
 .fr,.chip,.tchip{flex-shrink:0}
+/* iPhone : Safari zoome sur les champs de moins de 16 px, on reste donc à 16 px */
+.fld input,.fld select,.fld textarea,.inp,.trow input,.trow select,.tbl td input{font-size:16px}
+.fr{padding-right:14px}
 
 /* téléphone réel : plein écran */
 @media (max-width:600px){
