@@ -1001,10 +1001,10 @@ function renderGF() {
       ${g.course === 18 ? `<div class="notice">${svg(I.info, 20)}<span><strong>Index 35 minimum</strong> pour jouer le 18 trous. Votre index : 54.0. Vous pouvez consulter les départs, mais pas réserver.</span></div>` : ''}
       <button class="acc" data-act="info" aria-expanded="${g.info}"><span>Infos du parcours</span>${svg(I.plus, 18, 2.4)}</button>
       <div class="acc-body${g.info ? ' open' : ''}"><div><div class="acc-in">
-        <span>Abonnés 9 trous : <strong>1 réservation par jour</strong>.</span>
-        <span>18 trous : <strong>index 35 minimum</strong>.</span>
+        ${g.course === 9 ? `<span>Abonnés 9 trous : <strong>1 réservation par jour</strong>.</span>
+        <span>Le 18 trous demande un <strong>index de 35 minimum</strong>.</span>` : ''}
         <span>Hors abonnement : <strong>${g.course === 9 ? '31,50 € semaine · 37,50 € week-end' : '57,50 € semaine · 69 € week-end'}</strong></span>
-        <div style="display:flex;gap:16px"><a href="#" onclick="return false" style="font-weight:700">Règles locales</a><a href="#" onclick="return false" style="font-weight:700">Carte du parcours</a></div>
+        <a href="#" onclick="return false" style="font-weight:700;align-self:flex-start">Règles locales</a>
       </div></div></div>
       <div class="legend"><span>${roll('gfcount', list.length)} départs${g.min ? ' · ' + FOPTS[g.min][1] + ' · <button class="back" style="display:inline;min-height:0" data-act="min" data-v="0">Effacer le filtre</button>' : ''}</span><span style="display:inline-flex;align-items:center;gap:4px">${man('on')} inscrit ${man('me')} vous</span></div>
     </div>
