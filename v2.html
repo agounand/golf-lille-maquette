@@ -616,6 +616,11 @@ body.admin .stage{align-items:flex-start}
 .tl .tlogo{width:44px;height:auto;display:block;flex-shrink:0}
 .tl .title{margin-top:0}
 
+/* en-tête Cours : compteur sur la hauteur du titre */
+.screen .head .head-row{align-items:center}
+.screen .head #counter .roll{font-size:30px;line-height:1}
+.screen .head #counter span{white-space:nowrap}
+
 /* téléphone réel : plein écran */
 @media (max-width:600px){
   :root{--top:calc(16px + env(safe-area-inset-top,0px));--nav-pb:max(10px,env(safe-area-inset-bottom));--nav-h:calc(60px + max(10px,env(safe-area-inset-bottom)))}
@@ -1105,8 +1110,8 @@ function usedCollectifs() { return coursData().filter((x) => x.mine && (x.t === 
 function renderCours() {
   const c = S.c;
   const used = usedCollectifs();
-  $('#counter').innerHTML = `${roll('used', used)}<span>cours collectif${used > 1 ? 's' : ''} utilisé${used > 1 ? 's' : ''} en novembre</span>`;
-  $('#counter').style.cssText = 'flex-direction:column;align-items:flex-end;gap:0;text-align:right;max-width:170px;font-size:13px;line-height:1.25';
+  $('#counter').innerHTML = `${roll('used', used)}<span>cours collectif${used > 1 ? 's' : ''}<br>utilisé${used > 1 ? 's' : ''} en novembre</span>`;
+  $('#counter').style.cssText = 'flex-direction:row;align-items:center;gap:8px;text-align:left;font-size:12.5px;line-height:1.25;flex-shrink:0';
   mountRolls($('#counter'));
 
   const F = [['all','Tous'],['ind','Individuels'],['col','Collectifs'],['theme','À thème']];
