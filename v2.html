@@ -232,7 +232,7 @@ mark{background:#FFE66B;color:inherit;padding:0 3px;border-radius:3px}
 @keyframes draw{to{stroke-dashoffset:0}}
 
 /* chiffres qui défilent */
-.roll{display:inline-flex;line-height:1.1;font-variant-numeric:tabular-nums}
+.roll{display:inline-flex;line-height:1.1;font-variant-numeric:lining-nums tabular-nums}
 .dg{display:inline-block;height:1.1em;overflow:hidden}
 .dg>span{display:flex;flex-direction:column;transition:transform .45s var(--out)}
 .dg>span>span{height:1.1em}
@@ -1124,7 +1124,7 @@ function renderCours() {
   $('#cScroll').innerHTML = `
     <div style="padding:12px 16px;display:flex;flex-direction:column;gap:8px">
       <section class="visio">
-        <div style="display:flex;align-items:center;gap:10px"><span class="live"></span><div style="flex:1;display:flex;flex-direction:column;gap:1px"><span style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;opacity:.85">Cours en visio · gratuit</span><b style="font-size:15px">Règles · jeudi 12 nov. à 18 h 30</b></div><a class="join" href="https://us02web.zoom.us/j/83822833556" target="_blank" rel="noopener">Rejoindre</a></div>
+        <div style="display:flex;align-items:center;gap:10px"><span class="live"></span><div style="flex:1;display:flex;flex-direction:column;gap:1px"><span style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;opacity:.85">Cours en visio · gratuit</span><b style="font-size:15px">Règles · jeudi 12 nov. à 18 h 30</b></div><a class="join" href="https://us02web.zoom.us/j/83822833556" target="_blank" rel="noopener">Rejoindre</a></div>
         <div class="replays"><span style="font-size:12px;font-weight:800;opacity:.8;flex-shrink:0">Replays</span>
           <a href="https://drive.google.com/file/d/1zh270y1VLeRaHCkABbky-58Tpo758gyS/view?usp=sharing" target="_blank" rel="noopener">${svg(I.play, 12, 2.4)}Règles</a>
           <a href="https://drive.google.com/file/d/1_5CjYJid3ibIfTTxMdB5zlMNnwyRpQsM/view?usp=sharing" target="_blank" rel="noopener">${svg(I.play, 12, 2.4)}Bonnes pratiques</a>
@@ -1260,7 +1260,7 @@ function deskCours() {
   <div class="dtools"><div class="fseg" style="margin-left:0">${F.map(([id, l]) => `<button data-act="cf" data-v="${id}" aria-pressed="${c.f === id}">${l}</button>`).join('')}</div></div>
   <div class="dtop">
     <section class="visio">
-      <div style="display:flex;align-items:center;gap:10px"><span class="live"></span><div style="flex:1;display:flex;flex-direction:column;gap:1px"><span style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;opacity:.85">Cours en visio · gratuit</span><b style="font-size:16px">Cours de règles · jeudi 12 novembre à 18 h 30</b></div><a class="join" href="https://us02web.zoom.us/j/83822833556" target="_blank" rel="noopener">Rejoindre</a></div>
+      <div style="display:flex;align-items:center;gap:10px"><span class="live"></span><div style="flex:1;display:flex;flex-direction:column;gap:1px"><span style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;opacity:.85">Cours en visio · gratuit</span><b style="font-size:16px">Cours de règles · jeudi 12 novembre à 18 h 30</b></div><a class="join" href="https://us02web.zoom.us/j/83822833556" target="_blank" rel="noopener">Rejoindre</a></div>
       <div class="replays"><span style="font-size:12px;font-weight:800;opacity:.8;flex-shrink:0">Replays</span>
         <a href="https://drive.google.com/file/d/1zh270y1VLeRaHCkABbky-58Tpo758gyS/view?usp=sharing" target="_blank" rel="noopener">${svg(I.play, 12, 2.4)}Règles</a>
         <a href="https://drive.google.com/file/d/1_5CjYJid3ibIfTTxMdB5zlMNnwyRpQsM/view?usp=sharing" target="_blank" rel="noopener">${svg(I.play, 12, 2.4)}Bonnes pratiques</a>
@@ -1382,13 +1382,13 @@ window.addEventListener('resize', placePill);
 Object.assign(S, {
   seaux: 21,
   fr: ['Julien M.', 'Sophie D.', 'Marc L.', 'Claire B.'],
-  shop: { cat: 'mem', q: { p10: 1 } },
+  shop: { cat: 'mem', q: {} },
   prodOff: {}, prodNames: {},
   acc: { view: 'main', av: 0, cal: true, rem: true, calPick: 'apple', lic: false, q: '' },
   login: { tab: 'member' },
   vis: { course: 18, day: 1, time: '12:20' },
   cond: { p18: true, p9: true, pr: true, he: true, vo: true, ch: true }, flag: 'rouge',
-  resto: 'tous les midis, 12 h – 14 h 30'
+  resto: 'tous les midis, 12 h – 14 h 30'
 });
 const fmt = (n) => n.toFixed(2).replace('.', ',') + ' €';
 const fmtShort = (n) => (Number.isInteger(n) ? String(n) : n.toFixed(2).replace('.', ',')) + ' €';
@@ -1460,7 +1460,7 @@ RENDER.boutique = function (fresh) {
       ${rows || '<p class="hint" style="--i:2;padding:14px 4px;border-top:1px solid var(--line);margin:0">Aucun produit dans cette catégorie. <button class="mini" data-act="shopCat" data-v="all">Voir tous les produits</button></p>'}
       <p class="hint" style="--i:8;margin:0;padding:14px 4px 0;border-top:1px solid var(--line)">Plus le lot est grand, moins le seau coûte cher. Les crédits sont ajoutés à votre carte dès le paiement. En payant, vous acceptez les <a href="#" onclick="return false">conditions générales de vente</a> du club.</p>
     </div></div>
-    <div class="paybar"><div class="tot"><small>${t.count} seau${t.count > 1 ? 'x' : ''} ajouté${t.count > 1 ? 's' : ''}</small><b>${fmt(t.total)}</b></div><button class="btn primary" data-act="shopPay"${t.count ? '' : ' disabled'}>${t.count ? 'Payer ' + fmt(t.total) : 'Payer'}</button></div>`, fresh);
+    <div class="paybar"><div class="tot"><small>${t.count ? t.count + ' seau' + (t.count > 1 ? 'x' : '') + ' ajouté' + (t.count > 1 ? 's' : '') : 'Panier vide'}</small><b>${fmt(t.total)}</b></div><button class="btn primary" data-act="shopPay"${t.count ? '' : ' disabled'}>${t.count ? 'Payer ' + fmt(t.total) : 'Payer'}</button></div>`, fresh);
 };
 function deskBoutique() {
   const t = shopTotals();
