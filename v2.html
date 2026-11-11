@@ -4,6 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Golf Lille">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#FFFFFF">
 <title>Golf Lille Métropole · Nouvelle appli membres</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1586,7 +1594,7 @@ RENDER.compte = function (fresh) {
         <div class="frs">${S.fr.map((n) => `<span class="av" title="${n}">${initials(n)}</span>`).join('')}</div><span class="hint">Tous les membres voient avec qui ils jouent dans les départs.</span></section>
       <section class="blk" style="--i:3" aria-label="Mon calendrier">${secCal()}</section>
       <section class="blk" style="--i:4">${secAvatar()}</section>
-      <div style="--i:5;margin-top:4px"><button class="linkrow" data-act="accView" data-v="coord">Mes coordonnées et identifiant<span>${svg(I.chev, 18)}</span></button>
+      <div style="--i:5;margin-top:4px">${installRow()}<button class="linkrow" data-act="accView" data-v="coord">Mes coordonnées et identifiant<span>${svg(I.chev, 18)}</span></button>
         <button class="linkrow" data-act="accView" data-v="mdp">Changer mon mot de passe<span>${svg(I.chev, 18)}</span></button>
         <button class="linkrow red" data-act="logout">Se déconnecter</button></div>
     </div>`;
@@ -1613,6 +1621,34 @@ function deskCompte() {
     </div>
   </div>`;
 }
+/* installer l'appli sur l'écran d'accueil du téléphone */
+const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const isAndroid = () => /android/i.test(navigator.userAgent);
+const isInstalled = () => !!navigator.standalone || matchMedia('(display-mode: standalone)').matches;
+let installEvt = null;
+window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); installEvt = e; });
+window.addEventListener('appinstalled', () => { installEvt = null; toast('Appli installée sur votre écran d’accueil.'); afterChange(); });
+function installRow() {
+  if (isInstalled()) return `<div class="linkrow" style="color:#1F5C1A">Appli installée sur ce téléphone<span>${svg(I.check, 18, 2.6)}</span></div>`;
+  return `<button class="linkrow" data-act="install"><span style="display:flex;flex-direction:column;gap:2px"><span>Installer l’appli sur mon téléphone</span><small class="hint" style="font-weight:500">Un raccourci sur l’écran d’accueil, sans passer par un magasin d’applis</small></span><span>${svg(I.chev, 18)}</span></button>`;
+}
+const SHARE_IC = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2F6FDE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-5px"><path d="M12 15V3M8 7l4-4 4 4M6 11H5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1h-1"/></svg>';
+const PLUS_IC = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-4px"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8.5v7M8.5 12h7"/></svg>';
+const DOTS_IC = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="vertical-align:-4px"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg>';
+function installDialog(os) {
+  const steps = os === 'ios'
+    ? [`Ouvrez cette page dans <strong>Safari</strong>.`, `Appuyez sur le bouton Partager ${SHARE_IC}, en bas de l’écran.`, `Faites défiler, puis choisissez <strong>« Sur l’écran d’accueil »</strong> ${PLUS_IC}.`, `Appuyez sur <strong>« Ajouter »</strong>, en haut à droite.`]
+    : [`Ouvrez cette page dans <strong>Chrome</strong>.`, `Appuyez sur le menu ${DOTS_IC}, en haut à droite.`, `Choisissez <strong>« Ajouter à l’écran d’accueil »</strong> ou « Installer l’application ».`, `Confirmez avec <strong>« Installer »</strong>.`];
+  dialog(`<div style="display:flex;align-items:center;gap:14px"><img src="icon-180.png" alt="" width="56" height="56" style="border-radius:14px;border:1px solid var(--line)"><div style="flex:1"><h2 class="title" style="font-size:28px">Installer l’appli</h2><span class="hint">Accès rapide depuis l’écran d’accueil</span></div></div>
+    <div class="sg" role="tablist" aria-label="Type de téléphone" style="align-self:flex-start"><button role="tab" data-act="installOs" data-v="ios" aria-selected="${os === 'ios'}">iPhone</button><button role="tab" data-act="installOs" data-v="android" aria-selected="${os !== 'ios'}">Android</button></div>
+    <ol style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px">${steps.map((s, i) => `<li style="display:flex;gap:12px;align-items:flex-start;font-size:15px;line-height:1.5"><b style="flex:0 0 28px;height:28px;border-radius:50%;background:var(--green-t);color:#1F5C1A;font-size:13px;display:flex;align-items:center;justify-content:center">${i + 1}</b><span>${s}</span></li>`).join('')}</ol>
+    <span class="hint">L’icône du club apparaît alors sur l’écran d’accueil et l’appli s’ouvre en plein écran, comme une appli classique.</span>
+    ${os !== 'ios' && installEvt ? '<button class="btn primary" data-act="installGo">Installer maintenant</button>' : ''}
+    <button class="btn ghost" data-act="dlgClose">Plus tard</button>`);
+}
+ACT.install = () => installDialog(isAndroid() ? 'android' : 'ios');
+ACT.installOs = (v) => installDialog(v);
+ACT.installGo = () => { if (!installEvt) return; installEvt.prompt(); installEvt.userChoice.then(() => { installEvt = null; closeDialog(); }); };
 const reAcc = () => PC() ? renderDesk() : RENDER.compte(false);
 function afterChange() { if (PC() ? S.dscreen === 'compte' : S.screen === 'compte') reAcc(); }
 ACT.accView = (v) => { S.acc.view = v; S.acc.q = ''; RENDER.compte(true); $('#s-compte .scroll').scrollTop = 0; };
