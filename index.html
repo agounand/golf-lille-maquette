@@ -999,13 +999,7 @@ function renderGF() {
   $('#gfScroll').innerHTML = `
     <div style="padding:8px 16px 8px;display:flex;flex-direction:column;gap:8px">
       ${g.course === 18 ? `<div class="notice">${svg(I.info, 20)}<span><strong>Index 35 minimum</strong> pour jouer le 18 trous. Votre index : 54.0. Vous pouvez consulter les départs, mais pas réserver.</span></div>` : ''}
-      <button class="acc" data-act="info" aria-expanded="${g.info}"><span>Infos du parcours</span>${svg(I.plus, 18, 2.4)}</button>
-      <div class="acc-body${g.info ? ' open' : ''}"><div><div class="acc-in">
-        ${g.course === 9 ? `<span>Abonnés 9 trous : <strong>1 réservation par jour</strong>.</span>
-        <span>Le 18 trous demande un <strong>index de 35 minimum</strong>.</span>` : ''}
-        <span>Hors abonnement : <strong>${g.course === 9 ? '31,50 € semaine · 37,50 € week-end' : '57,50 € semaine · 69 € week-end'}</strong></span>
-        <a href="#" onclick="return false" style="font-weight:700;align-self:flex-start">Règles locales</a>
-      </div></div></div>
+      ${courseInfo(g)}
       <div class="legend"><span>${roll('gfcount', list.length)} départs${g.min ? ' · ' + FOPTS[g.min][1] + ' · <button class="back" style="display:inline;min-height:0" data-act="min" data-v="0">Effacer le filtre</button>' : ''}</span><span style="display:inline-flex;align-items:center;gap:4px">${man('on')} inscrit ${man('me')} vous</span></div>
     </div>
     <div class="slots stagger go">${rows || '<div class="empty">Aucun départ ne correspond au filtre.<br><button class="mini" data-act="min" data-v="0">Effacer le filtre</button></div>'}</div>
@@ -1274,6 +1268,7 @@ function deskGF() {
     <div class="fseg"><span class="k" style="margin-right:4px">Places libres</span>${FOPTS.map(([v]) => `<button data-act="min" data-v="${v}" aria-pressed="${g.min === v}">${v === 0 ? 'Tous' : FSHORT[v]}</button>`).join('')}</div></div>
   <div class="alert" role="alert">${svg(I.alert, 18, 2.2).replace('currentColor', '#B3122A')}<span><strong>1 no-show en 60 jours.</strong> Au 2e, réservation en ligne bloquée.</span></div>
   ${g.course === 18 ? `<div class="notice" style="margin-top:8px">${svg(I.info, 20)}<span><strong>Index 35 minimum</strong> pour jouer le 18 trous. Votre index : 54.0. Vous pouvez consulter les départs, mais pas réserver.</span></div>` : ''}
+  <div style="margin-top:10px">${courseInfo(g)}</div>
   <div class="dsplit">
     <div>
       <div class="legend"><span>${roll('gfcount', list.length)} départs · ${DLONG[g.day]}</span><span style="display:inline-flex;align-items:center;gap:4px">${man('on')} inscrit ${man('me')} vous</span></div>
@@ -1281,6 +1276,17 @@ function deskGF() {
     </div>
     <aside class="dside">${S.sheet ? '<div class="panel" id="dpanel"></div>' : overview}</aside>
   </div>`;
+}
+const COURSE_MAPS = { 9: '', 18: '' }; /* images fournies par le club */
+function courseInfo(g) {
+  const c9 = g.course === 9, map = COURSE_MAPS[g.course];
+  return `<button class="acc" data-act="info" aria-expanded="${g.info}"><span>Infos du parcours</span>${svg(I.plus, 18, 2.4)}</button>
+      <div class="acc-body${g.info ? ' open' : ''}"><div><div class="acc-in">
+        ${c9 ? `<span>Abonnés 9 trous : <strong>1 réservation par jour</strong>.</span>
+        <span>Le 18 trous demande un <strong>index de 35 minimum</strong>.</span>` : ''}
+        <span>Hors abonnement : <strong>${c9 ? '31,50 € semaine · 37,50 € week-end' : '57,50 € semaine · 69 € week-end'}</strong></span>
+        <div style="display:flex;gap:18px;flex-wrap:wrap"><button class="back" style="display:inline;min-height:0;font-weight:700" data-act="rulesShow">Règles locales</button>${map ? `<button class="back" style="display:inline;min-height:0;font-weight:700" data-act="mapShow">Carte du parcours</button>` : ''}</div>
+      </div></div></div>`;
 }
 function deskCours() {
   const c = S.c, used = usedCollectifs();
@@ -1833,6 +1839,19 @@ DESK.compte = deskCompte;
 
 document.addEventListener('input', (e) => { const t = e.target.closest('[data-in]'); if (t && INP[t.dataset.in]) INP[t.dataset.in](t.value, t); });
 document.addEventListener('change', (e) => { const t = e.target.closest('[data-ch]'); if (t && CH[t.dataset.ch]) CH[t.dataset.ch](t.type === 'checkbox' ? t.checked : t.value, t); });
+
+/* règles locales : le texte vient de l’administration */
+S.rules = { date: '10 novembre 2026', list: [
+  { t: 'Relever les marques de balle', x: 'Relevez vos pitchs sur les greens et replacez les divots sur le fairway.' },
+  { t: 'Voiturettes et chariots', x: 'Selon l’état du parcours, voiturettes et chariots peuvent être interdits : consultez les conditions du jour sur l’accueil.' },
+  { t: 'Vitesse de jeu', x: 'Une partie de 9 trous se joue en 2 h 15 environ. Laissez passer le groupe qui vous rattrape.' },
+  { t: 'Tenue', x: 'Une tenue de golf correcte est demandée sur le parcours et au club house.' }
+] };
+const rulesHtml = (r) => `<div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><h2 class="title" style="font-size:30px">Règles locales</h2><button class="mini" data-act="dlgClose">Fermer</button></div>
+  <div style="display:flex;flex-direction:column;gap:12px;max-height:60vh;overflow:auto">${r.list.length ? r.list.map((x, i) => `<div><b style="font-size:15px">${i + 1}. ${esc(x.t)}</b><p style="margin:2px 0 0;font-size:14.5px;line-height:1.5;color:#3B4760">${esc(x.x)}</p></div>`).join('') : '<span class="hint">Aucune règle publiée pour l’instant.</span>'}</div>
+  <span class="hint">Mis à jour le ${esc(r.date)}.</span>`;
+ACT.rulesShow = () => dialog(rulesHtml(S.rules));
+ACT.mapShow = () => { const src = COURSE_MAPS[S.gf.course]; if (src) dialog(`<div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><h2 class="title" style="font-size:28px">Parcours ${S.gf.course} trous</h2><button class="mini" data-act="dlgClose">Fermer</button></div><img src="${src}" alt="Schéma du parcours ${S.gf.course} trous" style="width:100%;height:auto;max-height:68vh;object-fit:contain;border-radius:14px;background:#fff">`); };
 
 /* ================= ADMINISTRATION ================= */
 const ANAV = [
@@ -2607,6 +2626,35 @@ ACT.mlSave = () => toast(`Modèle « ${esc(mlT().name)} » enregistré : il sera
 ACT.mlTest = () => toast('Test envoyé à votre adresse (simulation).', { info: true });
 ACT.mlReset = () => { const t = mlT(); t.subject = t.o[0]; t.body = t.o[1]; S.a.ml.sel = S.a.ml.sel; renderAdmin(true); toast('Modèle d’origine rétabli.', { info: true }); };
 ACT.mlSend = () => { const t = mlT(); toast(`« ${esc(t.name)} » programmé pour demain 9 h (simulation).`); };
+
+/* ---------- Règles locales (administration) ---------- */
+ANAV.splice(4, 0, ['regles', 'Règles locales', '<path d="M6 3h9l4 4v14H6zM14 3v5h5M9 13h7M9 17h7"/>']);
+S.a.rg = { list: S.rules.list.map((x) => Object.assign({}, x)), dirty: false };
+ADM.regles = function () {
+  const g = S.a.rg;
+  return aHead('Affichées aux membres dans Green fee › Infos du parcours', 'Règles locales', '<div class="btns"><button class="abtn s" data-act="rgPrev">Voir comme un membre</button><button class="abtn p" data-act="rgPub">Publier</button></div>') + `
+  <div style="max-width:820px;display:flex;flex-direction:column;gap:6px">
+    ${g.dirty ? '<div class="note">Modifications non publiées : les membres voient encore la version précédente.</div>' : `<span class="hint">Version publiée le ${S.rules.date}. Les règles ci-dessous sont des exemples à remplacer par celles du club.</span>`}
+    ${g.list.map((x, i) => `<section class="panel form" style="animation:none;margin-top:12px;gap:10px"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><span class="k">Règle ${i + 1}</span><div class="btns"><button class="mini" data-act="rgUp" data-v="${i}" aria-label="Monter la règle ${i + 1}"${i === 0 ? ' disabled' : ''}>↑</button><button class="mini" data-act="rgDown" data-v="${i}" aria-label="Descendre la règle ${i + 1}"${i === g.list.length - 1 ? ' disabled' : ''}>↓</button><button class="mini red" data-act="rgDel" data-v="${i}">Supprimer</button></div></div>
+      ${F('rt' + i, 'Titre', `<input id="rt${i}" type="text" value="${esc(x.t)}" data-in="rgT" data-v="${i}" autocomplete="off">`)}
+      ${F('rx' + i, 'Texte', `<textarea id="rx${i}" rows="3" data-in="rgX" data-v="${i}">${esc(x.x)}</textarea>`)}</section>`).join('')}
+    <div class="btns" style="margin-top:12px"><button class="abtn s" data-act="rgAdd">+ Ajouter une règle</button></div>
+  </div>`;
+};
+const rgDirty = () => { if (!S.a.rg.dirty) { S.a.rg.dirty = true; renderAdmin(); } };
+INP.rgT = (val, el) => { S.a.rg.list[+el.dataset.v].t = val; rgDirty(); };
+INP.rgX = (val, el) => { S.a.rg.list[+el.dataset.v].x = val; rgDirty(); };
+ACT.rgAdd = () => { S.a.rg.list.push({ t: '', x: '' }); S.a.rg.dirty = true; rA(); const el = document.getElementById('rt' + (S.a.rg.list.length - 1)); if (el) el.focus(); };
+ACT.rgDel = (v) => { const g = S.a.rg, r = g.list.splice(+v, 1)[0]; g.dirty = true; rA(); toast(`Règle « ${esc(r.t || 'sans titre')} » supprimée.`, { info: true, action: 'Annuler', onAction: () => { g.list.splice(+v, 0, r); rA(); } }); };
+ACT.rgUp = (v) => { const l = S.a.rg.list, i = +v; if (i > 0) { [l[i - 1], l[i]] = [l[i], l[i - 1]]; S.a.rg.dirty = true; rA(); } };
+ACT.rgDown = (v) => { const l = S.a.rg.list, i = +v; if (i < l.length - 1) { [l[i + 1], l[i]] = [l[i], l[i + 1]]; S.a.rg.dirty = true; rA(); } };
+ACT.rgPrev = () => dialog(rulesHtml({ date: 'aujourd’hui (aperçu)', list: S.a.rg.list.filter((x) => x.t.trim() || x.x.trim()) }));
+ACT.rgPub = () => {
+  const l = S.a.rg.list.filter((x) => x.t.trim() || x.x.trim());
+  if (l.some((x) => !x.t.trim())) return toast('Chaque règle a besoin d’un titre.', { info: true });
+  S.rules = { date: '10 novembre 2026', list: l.map((x) => Object.assign({}, x)) }; S.a.rg.list = l.map((x) => Object.assign({}, x)); S.a.rg.dirty = false; rA();
+  toast(`${l.length} règle${l.length > 1 ? 's' : ''} publiée${l.length > 1 ? 's' : ''} : visible${l.length > 1 ? 's' : ''} dans Green fee › Infos du parcours.`);
+};
 
 go('accueil');
 })();
