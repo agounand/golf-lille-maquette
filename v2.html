@@ -655,7 +655,9 @@ body.admin .stage{align-items:flex-start}
 
 /* carte du parcours : fenêtre déplaçable, assez grande pour lire les numéros */
 .mapbox{overflow:auto;max-height:62vh;border-radius:14px;border:1px solid var(--line);background:#fff;-webkit-overflow-scrolling:touch}
-.mapbox img{display:block;width:max(100%,720px);height:auto}
+.mapbox img{display:block;width:max(100%,540px);height:auto}
+
+.nw{white-space:nowrap}
 
 /* téléphone réel : plein écran */
 @media (max-width:600px){
@@ -1288,7 +1290,7 @@ function courseInfo(g) {
       <div class="acc-body${g.info ? ' open' : ''}"><div><div class="acc-in">
         ${c9 ? `<span>Abonnés 9 trous : <strong>1 réservation par jour</strong>.</span>
         <span>Le 18 trous demande un <strong>index de 35 minimum</strong>.</span>` : ''}
-        <span>Hors abonnement : <strong>${c9 ? '31,50 € semaine · 37,50 € week-end' : '57,50 € semaine · 69 € week-end'}</strong></span>
+        <span>Hors abonnement : <strong>${c9 ? '<span class="nw">31,50 € semaine</span> · <span class="nw">37,50 € week‑end</span>' : '<span class="nw">57,50 € semaine</span> · <span class="nw">69 € week‑end</span>'}</strong></span>
         <div style="display:flex;gap:18px;flex-wrap:wrap"><button class="back" style="display:inline;min-height:0;font-weight:700" data-act="rulesShow">Règles locales</button>${map ? `<button class="back" style="display:inline;min-height:0;font-weight:700" data-act="mapShow">Carte du parcours</button>` : ''}</div>
       </div></div></div>`;
 }
