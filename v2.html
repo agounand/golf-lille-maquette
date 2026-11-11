@@ -659,6 +659,9 @@ body.admin .stage{align-items:flex-start}
 
 .nw{white-space:nowrap}
 
+.sg.dark button[aria-pressed="true"]{background:var(--slate);color:#fff}
+.sg button[lang]{min-width:46px}
+
 /* téléphone réel : plein écran */
 @media (max-width:600px){
   :root{--top:calc(16px + env(safe-area-inset-top,0px));--nav-pb:max(10px,env(safe-area-inset-bottom));--nav-h:calc(60px + max(10px,env(safe-area-inset-bottom)))}
@@ -1620,6 +1623,12 @@ ACT.scAdd = () => {
   const l = scList(); l.push({ d: '10/11', t, s: v }); reAcc();
   toast(`Score de ${v} enregistré pour votre partie de ${t} trous.`, { action: 'Annuler', onAction: () => { const i = l.map((e) => e.s).lastIndexOf(v); if (i > -1) l.splice(i, 1); reAcc(); } });
 };
+function secLang() {
+  const l = S.lang || 'fr';
+  return `<div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><div style="display:flex;flex-direction:column;gap:2px"><h2 class="sec-t" style="font-size:22px">Langue</h2><span class="hint">Langue de l’application</span></div>
+    <div class="sg dark" role="group" aria-label="Langue"><button data-act="lang" data-v="fr" aria-pressed="${l === 'fr'}" lang="fr">FR</button><button data-act="lang" data-v="en" aria-pressed="${l === 'en'}" lang="en">EN</button></div></div>`;
+}
+ACT.lang = (v) => { if ((S.lang || 'fr') === v) return; S.lang = v; reAcc(); toast(v === 'en' ? 'English selected. The translation will come with the final version (simulation).' : 'Français sélectionné.', { info: true }); };
 function secCal() {
   const a = S.acc;
   return `<div style="display:flex;align-items:center;gap:12px"><div style="flex:1"><h2 class="sec-t">Synchroniser mon calendrier</h2><span class="hint">Green fees et cours ajoutés automatiquement</span></div><button class="sw" role="switch" aria-checked="${a.cal}" aria-label="Synchronisation du calendrier" data-act="calToggle"><span></span></button></div>
@@ -1679,6 +1688,7 @@ RENDER.compte = function (fresh) {
         <div class="frs">${S.fr.map((n) => `<span class="av" title="${n}">${initials(n)}</span>`).join('')}</div><span class="hint">Tous les membres voient avec qui ils jouent dans les départs.</span></section>
       <section class="blk" style="--i:3" aria-label="Mon calendrier">${secCal()}</section>
       <section class="blk" style="--i:4">${secAvatar()}</section>
+      <section class="blk" style="--i:4">${secLang()}</section>
       <div style="--i:5;margin-top:4px">${installRow()}<button class="linkrow" data-act="accView" data-v="coord">Mes coordonnées et identifiant<span>${svg(I.chev, 18)}</span></button>
         <button class="linkrow" data-act="accView" data-v="mdp">Changer mon mot de passe<span>${svg(I.chev, 18)}</span></button>
         <button class="linkrow red" data-act="logout">Se déconnecter</button></div>
@@ -1701,6 +1711,7 @@ function deskCompte() {
       <section class="blk" aria-label="Mon calendrier">${secCal()}</section>
     </div>
     <div>
+      <section class="blk">${secLang()}</section>
       <section class="blk">${secAvatar().replace('class="avgrid"', 'class="avgrid" style="grid-template-columns:repeat(10,minmax(0,1fr));gap:8px"')}</section>
       <section class="blk"><h2 class="sec-t">Mes coordonnées</h2>${formCoord(true)}</section>
       <section class="blk"><h2 class="sec-t">Mot de passe</h2>${formMdp(true)}</section>
